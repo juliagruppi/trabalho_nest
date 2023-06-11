@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
 import axios from "axios";
-import {api} from '../api/api';
+import { api, logout, uploadUserPictureApi } from '../api/api';
 import ImgLogoDois from '../img/logo-rosa.png';
 import ImgProduto from '../img/engrenagem-mulher.png';
 import ImgLivia from '../img/livia.png';
@@ -10,6 +10,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import { FaSearch } from "react-icons/fa";
+import { useGlobalStore } from '../useGlobalStore';
 
 type Mensagem = {
   mensagem: string,
@@ -25,6 +26,8 @@ const componentesPaginacaoInicial = {
 }
 const Historico = () => {
   const [protocolos, setProtocolos] = useState([])
+  const user = useGlobalStore((state) => state.user);
+  const setUser = useGlobalStore((state) => state.setUser);
   const [historico, setHistorico] = useState([])
   const [numeroDeProtocolos, setNumeroDeProtocolos] = useState(0)
   const [search, setSearch] = useState(undefined)
@@ -80,6 +83,15 @@ const Historico = () => {
     carregarProtocolos()
   }, [componentesPaginacao])
 
+  async function onPictureSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const picture = event.target.files?.[0];
+    if (picture !== undefined) {
+      console.log(picture)
+      const { userPicture } = await uploadUserPictureApi(picture)
+      setUser({ ...user, userPicture })
+    }
+  }
+
   return (
     <div className="App">
       <div className='flex'>
@@ -100,8 +112,25 @@ const Historico = () => {
 
         <div className='bg-branco-fundo w-3/4 pt-4 pb-2 pl-14 pr-14'>
           <div className='flex place-content-end'>
-            <h3 className='text-black text-base font-semibold grid  content-center'>Login: Júlia</h3>
-            <img className='w-24 pt-2 pb-4 pl-4 pr-4' src={ImgAvatar} />
+
+            <div className='flex flex-col gap-2 items-start'>
+              <h3 className='text-black text-base font-semibold grid  content-center'>Login: {user.name}</h3>
+              <button onClick={logout}>Logout</button>
+            </div>
+
+            <input
+              type="file"
+              accept="image/jpeg"
+              id="select-picture"
+              className="hidden"
+              onChange={onPictureSelect}
+            />
+            <label htmlFor="select-picture" className={`cursor-pointer ${!user.isAuthenticated ? 'hidden' : ''}`} >
+              <img src={user.userPicture
+                ? `http://localhost:8080/${user.userPicture}`
+                : ImgAvatar} alt="Usuario" className='w-24 pt-2 pb-4 pl-4 pr-4 cursor-pointer' />
+            </label>
+
           </div>
 
           <div className='bg-cinzinha drop-shadow-1xl  rounded-2xl'>

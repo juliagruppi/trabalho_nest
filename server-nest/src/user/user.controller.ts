@@ -15,7 +15,7 @@ import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get()
   users() {
@@ -37,11 +37,11 @@ export class UserController {
 
   @Post('upload-picture')
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(
+  async uploadFile(
     @UploadedFile() picture: Express.Multer.File,
     @Req() req: Request,
   ) {
     const userId = req['user'].id;
-    return this.userService.uploadPicture(userId, picture.buffer);
+    return await this.userService.uploadPicture(userId, picture.buffer);
   }
 }

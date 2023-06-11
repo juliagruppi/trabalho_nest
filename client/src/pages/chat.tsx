@@ -7,7 +7,7 @@ import iconeEnvio from '../img/arrow.png';
 import ImgLivia from '../img/livia.png';
 import ImgAvatar from '../img/AvatarJulia.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { api } from '../api/api';
+import { api, logout, uploadUserPictureApi } from '../api/api';
 import { useGlobalStore } from '../useGlobalStore';
 
 type Mensagem = {
@@ -60,6 +60,17 @@ const Chat = () => {
     setHistoricoMensagens([])
     setBotIniciado(false)
   }
+
+
+  async function onPictureSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const picture = event.target.files?.[0];
+    if (picture !== undefined) {
+      console.log(picture)
+      const { userPicture } = await uploadUserPictureApi(picture)
+      setUser({ ...user, userPicture })
+    }
+  }
+
   return (
     <div className="App">
       <div className='flex'>
@@ -80,8 +91,23 @@ const Chat = () => {
 
         <div className='bg-branco-fundo w-3/4 pt-4 pb-2 pl-14 pr-14'>
           <div className='flex place-content-end'>
-            <h3 className='text-black text-base font-semibold grid  content-center'>Login: {user.name}</h3>
-            <img className='w-24 pt-2 pb-4 pl-4 pr-4' src={ImgAvatar} />
+            <div className='flex flex-col gap-2 items-start'>
+              <h3 className='text-black text-base font-semibold grid  content-center'>Login: {user.name}</h3>
+              <button onClick={logout}>Logout</button>
+            </div>
+            <input
+              type="file"
+              accept="image/jpeg"
+              id="select-picture"
+              className="hidden"
+              onChange={onPictureSelect}
+            />
+            <label htmlFor="select-picture" className={`cursor-pointer ${!user.isAuthenticated ? 'hidden' : ''}`} >
+              <img src={user.userPicture
+                ? `http://localhost:8080/${user.userPicture}`
+                : ImgAvatar} alt="Usuario" className='w-24 pt-2 pb-4 pl-4 pr-4 cursor-pointer' />
+            </label>
+
           </div>
 
           <div className='bg-cinzinha drop-shadow-1xl  rounded-2xl'>

@@ -3,8 +3,11 @@ import {
   Property,
   Entity,
   DateTimeType,
-  ManyToOne
+  ManyToOne,
+  OneToMany,
+  Collection
 } from '@mikro-orm/core';
+import { HistoricoAtendimento } from 'src/historicoAtendimento/historicoAtendimento.entity';
 import { User } from 'src/user/user.entity';
 
 @Entity()
@@ -22,5 +25,8 @@ export class Protocolo {
     onDelete: 'cascade',
   })
   user: User;
+
+  @OneToMany(() => HistoricoAtendimento, (historico) => historico.protocolo)
+  historico = new Collection<HistoricoAtendimento>(this);
 
 }

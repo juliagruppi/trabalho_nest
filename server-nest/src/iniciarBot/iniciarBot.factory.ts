@@ -1,12 +1,39 @@
 import { Factory, Faker } from '@mikro-orm/seeder';
 import { IniciarBot } from './iniciarBot.entity';
 
-export class NotepadFactory extends Factory<IniciarBot> {
+export class IniciarBotFactory0 extends Factory<IniciarBot> {
     model = IniciarBot;
 
     definition(faker: Faker): Partial<IniciarBot> {
         return {
             mensagem: mensagensIniciais[0]
+        };
+    }
+}
+export class IniciarBotFactory1 extends Factory<IniciarBot> {
+    model = IniciarBot;
+
+    definition(faker: Faker): Partial<IniciarBot> {
+        return {
+            mensagem: mensagensIniciais[1]
+        };
+    }
+}
+export class IniciarBotFactory2 extends Factory<IniciarBot> {
+    model = IniciarBot;
+
+    definition(faker: Faker): Partial<IniciarBot> {
+        return {
+            mensagem: mensagensIniciais[2]
+        };
+    }
+}
+export class IniciarBotFactory3 extends Factory<IniciarBot> {
+    model = IniciarBot;
+
+    definition(faker: Faker): Partial<IniciarBot> {
+        return {
+            mensagem: mensagensIniciais[3]
         };
     }
 }
